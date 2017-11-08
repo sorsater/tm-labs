@@ -11,7 +11,10 @@ def progressbar(progress, *args, start='[', end=']', marker='', fill='█', bg='
 	if verbose:
 		out += ' {:.2f}%'.format(progress*100)
 
-	print(out, *args, end='\r')
+	print('\033[K' + out, *args, end='\r')
+
+	if progress == 1:
+		print()
 
 
 def crabby(*args, **kwargs):
