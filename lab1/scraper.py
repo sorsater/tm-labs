@@ -35,7 +35,7 @@ def find_all_apps(url, num_apps):
     apps = set(find_app_from_url(url))
     while len(apps) < num_apps:
         progressbar(len(apps) / num_apps)
-        for app in apps:
+        for app in list(apps):
             apps.update(find_app_from_url(app))
             progressbar(len(apps) / num_apps)
             if len(apps) >= num_apps:
