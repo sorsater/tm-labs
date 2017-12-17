@@ -79,13 +79,31 @@ class InvertedIndex(object):
             if term not in terms:
                 vector[idx] = 0
             else:
-                vector[idx] = document_counts[term] / max_value  * self.idf[term]
+                vector[idx] = document_counts[term] / max_value * self.idf[term]
+        
+        return vector
+    
+    # Vectorize for queries
+    # Use the ranked query formula from the slides
+    def q_vectorize(self, terms):
+        vector = [-1] * len(self.vocab)
+        document_counts = Counter(terms)
+
+        max_value = max(document_counts.values())
+
+        for term, idx in self.idx_map.items():
+            if term not in terms:
+                vector[idx] = 0
+            else:
+                fiq = document_counts[term] / max_value
+                vector[idx] = (0.5 + 0.5 * fiq) * self.idf[term]
         
         return vector
 
     def query(self, query, k):
         terms = self.process_document(query)
-        q_vector = self.vectorize(terms)
+        q_vector = self.q_vectorize(terms)
+
         if not sum(q_vector):
             return [[-1, 'Not found']]
 
